@@ -131,7 +131,6 @@ public:
             MPI_Irecv(&local_values[1 * (local_M_with_ghost + 1) + local_M_with_ghost], 1, col_type, neighbors[1], 0, cart_comm, &requests[req_count++]);
         }
 
-        // --- Intercambio Vertical (Abajo/Arriba) ---
         if (neighbors[2] != MPI_PROC_NULL) {
             MPI_Isend(&local_values[1 * (local_M_with_ghost + 1) + 1], local_M_no_ghost + 1, MPI_DOUBLE, neighbors[2], 2, cart_comm, &requests[req_count++]);
             MPI_Irecv(&local_values[0 * (local_M_with_ghost + 1) + 1], local_M_no_ghost + 1, MPI_DOUBLE, neighbors[2], 3, cart_comm, &requests[req_count++]);
@@ -245,7 +244,6 @@ public:
             std::cout << "Written " << total_segments << " segments to " << filename << std::endl;
         }
         
-        // Liberar el tipo de dato
         MPI_Type_free(&segment_type);
     }
 
@@ -281,10 +279,10 @@ public:
         MPI_Reduce(times, max_times, 3, MPI_DOUBLE, MPI_MAX, 0, cart_comm);
 
         if (rank == 0) {
-            std::cout << "Total time: " << end_time - start_time << " seconds\n";
-            std::cout << "  Initialization: " << max_times[0] << "s\n";
-            std::cout << "  Computation: " << max_times[1] << "s\n";
-            std::cout << "  I/O: " << max_times[2] << "s\n";
+            std::cout << "Total time: " << (end_time - start_time)*1000 << "ms\n";
+            std::cout << "  Initialization: " << (max_times[0])*1000 << "ms\n";
+            std::cout << "  Computation: " << (max_times[1])*1000 << "ms\n";
+            std::cout << "  I/O: " << (max_times[2])*1000 << "ms\n";
         }
     }
 };
@@ -296,7 +294,7 @@ int main(int argc, char* argv[]) {
     {
         double x_min = -300.0, x_max = 300.0;
         double y_min = -300.0, y_max = 300.0;
-        int M = 10000, N = 10000;
+        int M = 1000, N = 1000;
 
         if (argc > 1) M = std::atoi(argv[1]);
         if (argc > 2) N = std::atoi(argv[2]);
