@@ -6,7 +6,6 @@
 
 using namespace std;
 
-// ... (las funciones f, out, draw_segment, interpolation no cambian) ...
 double f(double x, double y) {
     return x*x + y*y - 200.0*200.0;
 }
@@ -35,7 +34,6 @@ struct Point2D {
     double x, y;
 };
 
-// Estructura para guardar un segmento de línea
 struct Segment {
     Point2D p1, p2;
 };
@@ -102,30 +100,29 @@ void marching_squares(double x_min, double x_max,double y_min, double y_max,int 
 }
 
 int main(int argc, char* argv[]) {
+    int M = 1000, N = 1000, num_threads = 1;
 
-    int num_threads = omp_get_max_threads();
-    if (argc > 1) {
-        try {
-            num_threads = stoi(argv[1]);
-        } catch (const exception& e) {
-            cerr << "Argumento invalido. Se necesita un numero entero para los hilos." << endl;
-            return 1;
-        }
-    }
-    omp_set_num_threads(num_threads);
-    cout << "Ejecutando en modo PARALELO con " << num_threads << " hilos." << endl;
+
+    if (argc > 1) M = stoi(argv[1]);
+    if (argc > 2) N = stoi(argv[2]);
+    if (argc > 3) num_threads = stoi(argv[3]);
     
-    ofstream eps("output.eps");
+    omp_set_num_threads(num_threads);
+    
+    cout << "Ejecutando OMP con " << num_threads << " hilos y grid " << M << "x" << N << "." << endl;
+    
+    ofstream eps("output_omp.eps");
     eps << "%!PS-Adobe-3.0 EPSF-3.0\n";
     eps << "%%BoundingBox: -600 -600 600 600\n";
 
+    
     double start = omp_get_wtime();
-    marching_squares(-300.0, 300.0, -300.0, 300.0, 1000, 1000, eps);
+    marching_squares(-300.0, 300.0, -300.0, 300.0, M, N, eps);
     double end = omp_get_wtime();
     
-    double elapsed_time = end - start;
+    double elapsed_time_ms = (end - start) * 1000.0;
     
-    cout << "Tiempo de ejecucion: " << (elapsed_time * 1000.0) << " ms" << endl;
+    cout << "FINAL_TIME_MS:" << elapsed_time_ms << endl;
 
     eps << "showpage\n";
     eps.close();

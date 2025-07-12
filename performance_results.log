@@ -1,0 +1,79 @@
+Iniciando script de pruebas de rendimiento - Fri Jul 11 11:52:15 -05 2025
+
+##############################################################################
+## PASO 1: COMPILANDO TODOS LOS PROGRAMAS
+##############################################################################
+
+Compilando Secuencial...
+Compilando MPI puro...
+Compilando OpenMP puro...
+Compilando Híbrido...
+Compilación completada.
+
+##############################################################################
+## PASO: EJECUTANDO PRUEBAS DE ESCALABILIDAD PARA: MPI PURO
+##############################################################################
+
+Cores(p)  , Tiempo T(p)[ms], Speedup S(p)   , Eficiencia E(p)[%]
+1         , ERROR          , ERROR          , ERROR          
+2         , ERROR          , ERROR          , ERROR          
+4         , ERROR          , ERROR          , ERROR          
+8         , ERROR          , ERROR          , ERROR          
+
+##############################################################################
+## PASO: EJECUTANDO PRUEBAS DE ESCALABILIDAD PARA: OPENMP PURO
+##############################################################################
+
+Cores(p)  , Tiempo T(p)[ms], Speedup S(p)   , Eficiencia E(p)[%]
+
+Parse error: bad expression
+    <stdin>:6
+
+
+Parse error: bad expression
+    <stdin>:1
+
+1         , 235.749        , 0.000          , 0.00           
+
+Parse error: bad expression
+    <stdin>:6
+
+
+Parse error: bad expression
+    <stdin>:1
+
+2         , 126.243        , 0.000          , 0.00           
+
+Parse error: bad expression
+    <stdin>:6
+
+
+Parse error: bad expression
+    <stdin>:1
+
+4         , 74.645         , 0.000          , 0.00           
+
+Parse error: bad expression
+    <stdin>:6
+
+
+Parse error: bad expression
+    <stdin>:1
+
+8         , 63.489         , 0.000          , 0.00           
+
+##############################################################################
+## PASO: EJECUTANDO PRUEBAS DE ESCALABILIDAD PARA: HÍBRIDO (1 Hilo/Proceso)
+##############################################################################
+
+Cores(p)  , Tiempo T(p)[ms], Speedup S(p)   , Eficiencia E(p)[%]
+1         , ERROR          , ERROR          , ERROR          
+2         , ERROR          , ERROR          , ERROR          
+4         , ERROR          , ERROR          , ERROR          
+8         , ERROR          , ERROR          , ERROR          
+
+##############################################################################
+## DATOS PARA GRÁFICAS GENERADOS
+##############################################################################
+
+Copia las tablas de arriba a tu programa de hojas de cálculo.

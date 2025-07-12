@@ -103,22 +103,28 @@ void marching_squares(double x_min, double x_max,double y_min, double y_max,int 
     }
 }
 
-int main() {
-    ofstream eps("output.eps");
+int main(int argc, char* argv[]) {
+    int M = 1000, N = 1000;
+
+  
+    if (argc > 1) M = stoi(argv[1]);
+    if (argc > 2) N = stoi(argv[2]);
+
+    cout << "Ejecutando Secuencial con grid " << M << "x" << N << "." << endl;
+
+    ofstream eps("output_sequential.eps");
     eps << "%!PS-Adobe-3.0 EPSF-3.0\n";
     eps << "%%BoundingBox: -600 -600 600 600\n";
     
     auto start = high_resolution_clock::now();
     
-    marching_squares(-300.0, 300.0, -300.0, 300.0, 1000, 1000, eps);
+    marching_squares(-300.0, 300.0, -300.0, 300.0, M, N, eps);
     
     auto end = high_resolution_clock::now();
     
     auto duration_ms = duration_cast<milliseconds>(end - start);
 
-    
-    cout << "Tiempo de la función marching_squares:" << endl;
-    cout << duration_ms.count() << " ms" << endl;
+    cout << "FINAL_TIME_MS:" << duration_ms.count() << endl;
 
     eps << "showpage\n";
     eps.close();
