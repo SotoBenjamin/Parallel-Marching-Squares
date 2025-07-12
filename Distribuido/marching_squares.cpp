@@ -296,7 +296,6 @@ public:
             std::cout << "  Computation: " << max_times[1] * 1000 << " ms\n";
             std::cout << "  I/O: " << max_times[2] * 1000 << " ms\n";
             
-            // Calcular métricas de rendimiento
             double cells_per_second = (global_M * global_N) / max_times[1];
             std::cout << "\nPerformance: " << cells_per_second / 1e6 
                       << " million cells/second\n";
