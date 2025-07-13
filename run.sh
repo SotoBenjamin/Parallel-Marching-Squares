@@ -1,32 +1,23 @@
 #!/bin/bash
 
 # --- CONFIGURACIÓN ---
-GRID_SIZE=4096      # Tamaño de la grilla para todas las pruebas (ej. 1024x1024)
-MAX_PROCESOS=4     # Número máximo de procesos MPI a probar
-MAX_THREADS=4       # Número máximo de hilos OpenMP a probar
-OUTPUT_CSV="resultados_sin_opt.csv"
+GRID_SIZE=16384
+# Definimos explícitamente los procesos e hilos a probar
+PROCESOS_A_PROBAR="1 2 4 8"
+THREADS_A_PROBAR="1 2 4 8"
+OUTPUT_CSV="resultados_escalabilidad_potencias.csv"
 
-# --- COMPILACIÓN (SIN -O3) ---
-echo "--- Iniciando compilación de todos los códigos (SIN optimización -O3) ---"
-
-# Compilar Secuencial
+# --- COMPILACIÓN ---
+echo "--- Iniciando compilación de todos los códigos ---"
 g++ Secuencial/marching_square.cpp -o Secuencial/a.out || { echo "Error compilando Secuencial"; exit 1; }
-
-# Compilar Compartido (OpenMP)
-g++ -fopenmp Compartido/marching_squares.cpp -o Compartido/a.out || { echo "Error compilando Compartido"; exit 1; }
-
-# Compilar Distribuido (MPI)
+g++-14 -fopenmp Compartido/marching_squares.cpp -o Compartido/a.out || { echo "Error compilando Compartido"; exit 1; }
 mpic++ Distribuido/marching_squares.cpp -o Distribuido/a.out || { echo "Error compilando Distribuido"; exit 1; }
-
-# Compilar Híbrido (MPI + OpenMP)
 mpic++ -fopenmp Hibrido/marching_squares.cpp -o Hibrido/a.out || { echo "Error compilando Híbrido"; exit 1; }
-
 echo "--- Compilación finalizada exitosamente ---"
 echo ""
 
-
 # --- EJECUCIÓN Y RECOLECCIÓN DE DATOS ---
-echo "--- Iniciando pruebas de rendimiento ---"
+echo "--- Iniciando pruebas de rendimiento (procesos e hilos en potencias de 2) ---"
 echo "Resultados se guardarán en: $OUTPUT_CSV"
 
 # Crear el archivo CSV y escribir los encabezados
@@ -39,7 +30,8 @@ echo "Secuencial,1,1,1,$TIME_MS_SEQ" >> $OUTPUT_CSV
 
 
 # 2. Pruebas Compartido (OpenMP)
-for h in $(seq 1 $MAX_THREADS); do
+# --- MODIFICADO: Bucle sobre la secuencia 1 2 4 8 ---
+for h in $THREADS_A_PROBAR; do
     if [ $h -eq 1 ]; then
         echo "Compartido,1,1,1,$TIME_MS_SEQ" >> $OUTPUT_CSV
         continue
@@ -51,7 +43,7 @@ done
 
 
 # 3. Pruebas Distribuido (MPI)
-for p in $(seq 1 $MAX_PROCESOS); do
+for p in $PROCESOS_A_PROBAR; do
      if [ $p -eq 1 ]; then
         echo "Distribuido,1,1,1,$TIME_MS_SEQ" >> $OUTPUT_CSV
         continue
@@ -63,8 +55,9 @@ done
 
 
 # 4. Pruebas Híbrido (MPI + OpenMP)
-for p in $(seq 1 $MAX_PROCESOS); do
-    for h in $(seq 1 $MAX_THREADS); do
+for p in $PROCESOS_A_PROBAR; do
+    # --- MODIFICADO: Bucle sobre la secuencia 1 2 4 8 ---
+    for h in $THREADS_A_PROBAR; do
         TOTAL_THREADS=$((p * h))
         if [ $p -eq 1 ] && [ $h -eq 1 ]; then
             echo "Hibrido,1,1,1,$TIME_MS_SEQ" >> $OUTPUT_CSV
