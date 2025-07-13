@@ -66,7 +66,7 @@ public:
         dx = (x_max - x_min) / global_M;
         dy = (y_max - y_min) / global_N;
 
-        all_local_segments.reserve(local_M * local_N / 10);
+        all_local_segments.reserve(local_M * local_N / size);
     }
 
     ~MarchingSquaresMPI() {
@@ -201,7 +201,6 @@ int main(int argc, char* argv[]) {
         double x_min = -300.0, x_max = 300.0;
         double y_min = -300.0, y_max = 300.0;
         int M = 1000, N = 1000;
-
         if (argc > 1) M = std::atoi(argv[1]);
         if (argc > 2) N = std::atoi(argv[2]);
 
